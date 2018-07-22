@@ -5,6 +5,8 @@ let geoJSON = {
 };
 let markers = [];
 
+let routeGeoJSONArray = [];
+
 let intervalID = 0;
 
 $(document).ready(function() {
@@ -107,6 +109,11 @@ function getVehiclesStart() {
 
 function getVehicles() {
   // console.log('Clicked');
+  for (let i = 0; i < routeGeoJSONArray.length; i++) {
+    mainMap.removeLayer(`route${i}`);
+    mainMap.removeSource(`muniRoute${i}`);
+  }
+  routeGeoJSONArray = [];
   let selectedRoute = $('#route').val();
   const url = `http://restbus.info/api/agencies/sf-muni/routes/${selectedRoute}`;
   fetch(url).then(function(response) {
@@ -133,8 +140,13 @@ function getVehicles() {
         }
 
         vehicleData.json().then(response => {
-          geoJSON = toGeoJSON(response, directions);
+          geoJSON = toGeoJSON(response, directions, data);
+          getRouteCoord(data);
+          // console.log(routeGeoJSON);
           mainMap.getSource('muniPoints').setData(geoJSON);
+          routeLoad();
+          mainMap.moveLayer('points');
+          // console.log(mainMap.getSource('muniRoute').getData());
           console.log(`Updated - Route: ${selectedRoute}`);
         });
       });
@@ -142,7 +154,31 @@ function getVehicles() {
   });
 }
 
-function toGeoJSON(data, directions) {
+function routeLoad() {
+  for (let i = 0; i < routeGeoJSONArray.length; i++) {
+    mainMap.addSource(`muniRoute${i}`, {
+      type: 'geojson',
+      data: routeGeoJSONArray[i]
+    });
+    mainMap.addLayer({
+      id: `route${i}`,
+      type: 'line',
+      source: `muniRoute${i}`,
+      layout: {
+        'line-join': 'round',
+        'line-cap': 'round'
+      },
+      paint: {
+        'line-color': '#888',
+        'line-width': 8
+      }
+    });
+    mainMap.getSource(`muniRoute${i}`).setData(routeGeoJSONArray[i]);
+  }
+}
+
+function toGeoJSON(data, directions, routeData) {
+  // console.log(routeData);
   let geoJSON = {
     type: 'FeatureCollection',
     features: []
@@ -150,7 +186,7 @@ function toGeoJSON(data, directions) {
   data.forEach(vehicle => {
     let direction = '';
     let shortDirection = '';
-    // console.log(vehicle.directionId);
+
     if (vehicle.directionId != null) {
       if (vehicle.directionId.charAt(vehicle.directionId.length - 5) == 'I') {
         direction = directions[0].title;
@@ -194,7 +230,7 @@ function getRoutes() {
   const url = 'http://restbus.info/api/agencies/sf-muni/routes';
 
   // Populate dropdown with list of routes
-  $.getJSON(url, function(data.routes) {
+  $.getJSON(url, function(data) {
     $.each(data, function(key, entry) {
       dropdown.append(
         $('<option></option>')
@@ -209,4 +245,23 @@ function removeDots() {
   clearInterval(intervalID);
   geoJSON = { type: 'FeatureCollection', features: [] };
   mainMap.getSource('muniPoints').setData(geoJSON);
+
+  for (let i = 0; i < routeGeoJSONArray.length; i++) {
+    mainMap.removeLayer(`route${i}`);
+    mainMap.removeSource(`muniRoute${i}`);
+  }
+  routeGeoJSONArray = [];
+}
+
+function getRouteCoord(routeInfo) {
+  routeInfo.paths.forEach(path => {
+    let blank = {
+      type: 'Feature',
+      geometry: { type: 'LineString', coordinates: [] }
+    };
+    path.points.forEach(point => {
+      blank.geometry.coordinates.push([point.lon, point.lat]);
+    });
+    routeGeoJSONArray.push(blank);
+  });
 }
