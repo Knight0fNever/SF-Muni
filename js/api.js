@@ -191,7 +191,7 @@ function getRoutes() {
   dropdown.append('<option selected="true" disabled>Choose Route</option>');
   dropdown.prop('selectedIndex', 0);
 
-  const url = 'http://restbus.info/api/agencies/sf-muni/routes';
+  const url = 'https://restbus.info/api/agencies/sf-muni/routes';
 
   // Populate dropdown with list of routes
   $.getJSON(url, function(data) {
