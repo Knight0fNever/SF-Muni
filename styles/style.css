@@ -1,0 +1,47 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#map {
+  position: absolute;
+  top: 40px;
+  height: 100%;
+  width: 100%;
+}
+
+.marker-blue {
+  background-image: url('dot.png');
+  background-size: cover;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.marker-red {
+  background-image: url('red_dot.png');
+  background-size: cover;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.marker-gray {
+  background-image: url('gray_dot.png');
+  background-size: cover;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.mapboxgl-popup {
+  max-width: 200px;
+}
+
+.mapboxgl-popup-content {
+  text-align: center;
+  font-family: 'Open Sans', sans-serif;
+}
