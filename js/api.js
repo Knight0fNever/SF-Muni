@@ -108,7 +108,7 @@ function getVehiclesStart() {
 function getVehicles() {
   // console.log('Clicked');
   let selectedRoute = $('#route').val();
-  const url = `http://restbus.info/api/agencies/sf-muni/routes/${selectedRoute}`;
+  const url = `https://restbus.info/api/agencies/sf-muni/routes/${selectedRoute}`;
   fetch(url).then(function(response) {
     if (response.status !== 200) {
       console.warn(
@@ -119,7 +119,7 @@ function getVehicles() {
     response.json().then(data => {
       // console.log(data);
 
-      const vehiclesUri = `http://restbus.info/api/agencies/sf-muni/routes/${selectedRoute}/vehicles`;
+      const vehiclesUri = `https://restbus.info/api/agencies/sf-muni/routes/${selectedRoute}/vehicles`;
       let directions = [];
       directions.push(data.directions[0]);
       directions.push(data.directions[1]);
