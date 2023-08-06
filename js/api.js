@@ -115,7 +115,7 @@ function getVehicles() {
   }
   routeGeoJSONArray = [];
   let selectedRoute = $('#route').val();
-  const url = `http://restbus.info/api/agencies/sf-muni/routes/${selectedRoute}`;
+  const url = `http://restbus.info/api/agencies/sfmuni-sandbox/routes/${selectedRoute}`;
   fetch(url).then(function(response) {
     if (response.status !== 200) {
       console.warn(
@@ -126,7 +126,7 @@ function getVehicles() {
     response.json().then(data => {
       // console.log(data);
 
-      const vehiclesUri = `http://restbus.info/api/agencies/sf-muni/routes/${selectedRoute}/vehicles`;
+      const vehiclesUri = `http://restbus.info/api/agencies/sfmuni-sandbox/routes/${selectedRoute}/vehicles`;
       let directions = [];
       directions.push(data.directions[0]);
       directions.push(data.directions[1]);
@@ -227,7 +227,7 @@ function getRoutes() {
   dropdown.append('<option selected="true" disabled>Choose Route</option>');
   dropdown.prop('selectedIndex', 0);
 
-  const url = 'http://restbus.info/api/agencies/sf-muni/routes';
+  const url = 'http://restbus.info/api/agencies/sfmuni-sandbox/routes';
 
   // Populate dropdown with list of routes
   $.getJSON(url, function(data) {
